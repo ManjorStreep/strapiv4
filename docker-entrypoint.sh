@@ -1,7 +1,7 @@
 #!/bin/sh
 set -ea
 
-if [ "$1" = "strapi" ]; then
+if [ "$1" = "yarn" ]; then
 
   if [ ! -f "package.json" ]; then
 
