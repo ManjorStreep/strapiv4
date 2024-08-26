@@ -4,7 +4,7 @@ RUN apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev nasm
 
 EXPOSE 1337
 
-RUN yarn global add @strapi/strapi@4.17.1
+RUN yarn global add @strapi/strapi@4.25.8
 
 RUN mkdir /srv/app && chown 1000:1000 -R /srv/app
 
