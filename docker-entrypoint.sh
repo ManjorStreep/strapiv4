@@ -3,6 +3,9 @@ set -ea
 
 if [ "$1" = "yarn" ]; then
 
+  # Fix permissions for /srv/app
+  chown -R node:node /srv/app
+
   if [ ! -f "package.json" ]; then
 
     DATABASE_CLIENT=${DATABASE_CLIENT:-sqlite}
@@ -12,7 +15,8 @@ if [ "$1" = "yarn" ]; then
     echo "Using strapi $(strapi version)"
     echo "No project found at /srv/app. Creating a new strapi project"
 
-    DOCKER=true strapi new . \
+    # Run strapi new as node user
+    su-exec node:node strapi new . \
       --dbclient=$DATABASE_CLIENT \
       --dbhost=$DATABASE_HOST \
       --dbport=$DATABASE_PORT \
@@ -28,11 +32,11 @@ if [ "$1" = "yarn" ]; then
 
     if [ -f "yarn.lock" ]; then
 
-      yarn install
+      su-exec node:node yarn install
 
     else
 
-      npm install
+      su-exec node:node npm install
 
     fi
 
@@ -42,4 +46,5 @@ fi
 
 echo "Starting your app..."
 
-exec "$@"
+# Exec command as node user
+exec su-exec node:node "$@"
